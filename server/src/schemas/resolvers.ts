@@ -1,0 +1,49 @@
+import User from "../models/User.js"
+import { signToken } from '../services/auth.js';
+
+interface GetUser {
+    id: string
+}
+
+interface Login {
+    email: string,
+    password: string
+}
+
+interface AddUser {
+    username: string,
+    email: string,
+    password: string
+}
+
+const resolvers = {
+    Query: {
+        me: async (_: unknown, { id }: GetUser) => {
+            return await User.findById(id)
+        }
+    },
+    Mutation: {
+        login: async(_: unknown, { email, password }: Login) => {
+            const user = await User.findOne({ email });
+            if (!user) {
+                throw new Error("No user found with this email.");
+            }
+
+            const correctPw = user.isCorrectPassword(password);
+            if(!correctPw) {
+                throw new Error("Incorrect password.")
+            }
+
+            const token = signToken(user.username, user.password, user._id);
+            return  { token, user };
+        },
+        addUser: async(_: unknown, { username, email, password }: AddUser) => {
+            const user = await User.create({ username, email, password })
+
+            const token = signToken(user.username, user.password, user._id);
+            return token;
+        }
+    }
+}
+
+export default resolvers
