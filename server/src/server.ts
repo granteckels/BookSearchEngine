@@ -1,6 +1,6 @@
 import express from 'express';
 import path from 'node:path';
-import db from './config/connection.js';
+import './config/connection.js';
 import routes from './routes/index.js';
 
 const app = express();
@@ -16,6 +16,4 @@ if (process.env.NODE_ENV === 'production') {
 
 app.use(routes);
 
-db.once('open', () => {
-  app.listen(PORT, () => console.log(`🌍 Now listening on localhost:${PORT}`));
-});
+app.listen(PORT, () => console.log(`🌍 Now listening on localhost:${PORT}`));
