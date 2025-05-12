@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useQuery } from '@apollo/client';
 import type { FormEvent } from 'react';
 import {
   Container,
@@ -14,6 +15,7 @@ import { saveBook, searchGoogleBooks } from '../utils/API';
 import { saveBookIds, getSavedBookIds } from '../utils/localStorage';
 import type { Book } from '../models/Book';
 import type { GoogleAPIBook } from '../models/GoogleAPIBook';
+import { QUERY_ME } from '../utils/queries';
 
 const SearchBooks = () => {
   // create state for holding returned google api data
@@ -23,6 +25,10 @@ const SearchBooks = () => {
 
   // create state to hold saved bookId values
   const [savedBookIds, setSavedBookIds] = useState(getSavedBookIds());
+
+  const { error, data } = useQuery(QUERY_ME, {
+    variables: { id: "682121fbfcc1e200b8a10c30" },
+  });
 
   // set up useEffect hook to save `savedBookIds` list to localStorage on component unmount
   // learn more here: https://reactjs.org/docs/hooks-effect.html#effects-with-cleanup
@@ -87,6 +93,27 @@ const SearchBooks = () => {
       console.error(err);
     }
   };
+
+
+  if(error) {
+    return (
+      <>
+        <div>{error.message}</div>
+        <h2>foo</h2>
+      </>
+    )
+  } 
+  if(data) {
+    return (
+      <>
+        <div>{data.me.username}</div>
+        <h2>bar</h2>
+      </>
+    )
+  }
+
+  console.log("data: ", data)
+  console.log("error: ", error)
 
   return (
     <>

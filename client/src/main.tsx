@@ -1,7 +1,6 @@
 import ReactDOM from 'react-dom/client'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import 'bootstrap/dist/css/bootstrap.min.css'
-import { ApolloClient, InMemoryCache, gql } from '@apollo/client';
 
 import App from './App.jsx'
 import SearchBooks from './pages/SearchBooks'
@@ -23,24 +22,6 @@ const router = createBrowserRouter([
     ]
   }
 ])
-
-const client = new ApolloClient({
-  uri: 'http://127.0.0.1:3001/graphql/users',
-  cache: new InMemoryCache()
-})
-
-client
-  .query({
-    query: gql`
-      query GetUser {
-        me(id: "682121fbfcc1e200b8a10c30") {
-          username
-          email
-        }
-      }
-    `,
-  })
-  .then((result) => console.log(result));
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <RouterProvider router={router} />
