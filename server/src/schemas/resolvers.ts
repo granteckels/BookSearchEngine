@@ -41,7 +41,7 @@ const resolvers = {
             const user = await User.create({ username, email, password })
 
             const token = signToken(user.username, user.password, user._id);
-            return token;
+            return { token, user };
         }
     }
 }
