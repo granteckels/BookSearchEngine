@@ -1,10 +1,10 @@
 import { useState } from 'react';
+import { useMutation } from '@apollo/client';
 import type { ChangeEvent, FormEvent } from 'react';
 import { Form, Button, Alert } from 'react-bootstrap';
-import { useMutation } from '@apollo/client';
 
-import Auth from '../utils/auth';
 import { MUTATION_ADDUSER } from '../utils/mutations';
+import Auth from '../utils/auth';
 import type { User } from '../models/User';
 
 // biome-ignore lint/correctness/noEmptyPattern: <explanation>

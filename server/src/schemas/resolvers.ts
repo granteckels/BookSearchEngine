@@ -29,18 +29,19 @@ const resolvers = {
                 throw new Error("No user found with this email.");
             }
 
-            const correctPw = user.isCorrectPassword(password);
+            const correctPw = await user.isCorrectPassword(password);
             if(!correctPw) {
                 throw new Error("Incorrect password.")
             }
 
             const token = signToken(user.username, user.password, user._id);
-            return  { token, user };
+            return { token, user };
         },
         addUser: async(_: unknown, { username, email, password }: AddUser) => {
             const user = await User.create({ username, email, password })
 
             const token = signToken(user.username, user.password, user._id);
+            
             return { token, user };
         }
     }
