@@ -2,7 +2,11 @@ import express from 'express';
 import path from 'node:path';
 import cors from 'cors';
 import './config/connection.js';
-import routes from './routes/index.js';
+
+import { ApolloServer } from '@apollo/server';
+import { expressMiddleware } from '@apollo/server/express4';
+import { typeDefs, resolvers } from './schemas/index.js'
+import { authenticateToken } from './services/auth.js';
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -18,6 +22,9 @@ if (process.env.NODE_ENV === 'production') {
   app.use(express.static(path.join(__dirname, '../client/build')));
 }
 
-app.use(routes);
+const server = new ApolloServer({ typeDefs, resolvers });
+await server.start()
+
+app.use('/graphql', expressMiddleware(server, { context: authenticateToken }));
 
 app.listen(PORT, () => console.log(`🌍 Now listening on localhost:${PORT}`));
