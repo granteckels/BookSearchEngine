@@ -1,10 +1,6 @@
 import User from "../models/User.js"
 import { signToken } from '../services/auth.js';
 
-interface GetUser {
-    id: string
-}
-
 interface Login {
     email: string,
     password: string
@@ -18,8 +14,8 @@ interface AddUser {
 
 const resolvers = {
     Query: {
-        me: async (_: unknown, { id }: GetUser) => {
-            return await User.findById(id)
+        me: async (_: unknown, __: unknown, context: any) => {
+            return await User.findById(context.user._id)
         }
     },
     Mutation: {
@@ -34,7 +30,7 @@ const resolvers = {
                 throw new Error("Incorrect password.")
             }
 
-            const token = signToken(user.username, user.password, user._id);
+            const token = signToken(user.username, user.email, user._id);
             return { token, user };
         },
         addUser: async(_: unknown, { username, email, password }: AddUser) => {

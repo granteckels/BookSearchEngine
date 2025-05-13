@@ -22,7 +22,7 @@ const typeDefs = `
     }
         
     type Query {
-        me(id: ID): User
+        me: User
     }
 
     input BookInput {
