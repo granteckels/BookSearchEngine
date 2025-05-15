@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-// import { useQuery } from '@apollo/client';
+import { useMutation } from '@apollo/client';
 import type { FormEvent } from 'react';
 import {
   Container,
@@ -11,11 +11,11 @@ import {
 } from 'react-bootstrap';
 
 import Auth from '../utils/auth';
-import { saveBook, searchGoogleBooks } from '../utils/API';
+import { searchGoogleBooks } from '../utils/API';
 import { saveBookIds, getSavedBookIds } from '../utils/localStorage';
 import type { Book } from '../models/Book';
 import type { GoogleAPIBook } from '../models/GoogleAPIBook';
-// import { QUERY_ME } from '../utils/queries';
+import { MUTATION_SAVEBOOK } from '../utils/mutations';
 
 const SearchBooks = () => {
   // create state for holding returned google api data
@@ -26,9 +26,7 @@ const SearchBooks = () => {
   // create state to hold saved bookId values
   const [savedBookIds, setSavedBookIds] = useState(getSavedBookIds());
 
-  // const { error, data } = useQuery(QUERY_ME, {
-  //   variables: { id: "682121fbfcc1e200b8a10c30" },
-  // });
+  const [saveBook] = useMutation(MUTATION_SAVEBOOK)
 
   // set up useEffect hook to save `savedBookIds` list to localStorage on component unmount
   // learn more here: https://reactjs.org/docs/hooks-effect.html#effects-with-cleanup
@@ -81,11 +79,9 @@ const SearchBooks = () => {
     }
 
     try {
-      const response = await saveBook(bookToSave, token);
-
-      if (!response.ok) {
-        throw new Error('something went wrong!');
-      }
+      await saveBook({ variables: {
+        book: bookToSave
+      } });
 
       // if book successfully saves to user's account, save book id to state
       setSavedBookIds([...savedBookIds, bookToSave.bookId]);
@@ -93,27 +89,6 @@ const SearchBooks = () => {
       console.error(err);
     }
   };
-
-
-  // if(error) {
-  //   return (
-  //     <>
-  //       <div>{error.message}</div>
-  //       <h2>foo</h2>
-  //     </>
-  //   )
-  // } 
-  // if(data) {
-  //   return (
-  //     <>
-  //       <div>{data.me.username}</div>
-  //       <h2>bar</h2>
-  //     </>
-  //   )
-  // }
-
-  // console.log("data: ", data)
-  // console.log("error: ", error)
 
   return (
     <>
