@@ -17,9 +17,7 @@ const PORT = process.env.PORT || 3001;
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-app.use(cors({
-  origin: /http:\/\/localhost:(3000|3001)/
-}));
+app.use(cors());
 
 // if we're in production, serve client/build as static assets
 if (process.env.NODE_ENV === 'production') {
