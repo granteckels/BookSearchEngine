@@ -1,5 +1,4 @@
 import express from 'express';
-import cors from 'cors';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -17,7 +16,6 @@ const PORT = process.env.PORT || 3001;
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-app.use(cors());
 
 // if we're in production, serve client/build as static assets
 if (process.env.NODE_ENV === 'production') {
